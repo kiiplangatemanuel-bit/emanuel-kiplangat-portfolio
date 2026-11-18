@@ -9,6 +9,7 @@ export type Profile = {
   github_url: string;
   linkedin_url: string;
   avatar_url: string;
+  resume_url: string;
   updated_at?: string;
 };
 
@@ -39,5 +40,6 @@ export const defaultProfile: Profile = {
   phone: "",
   github_url: "https://github.com/kiiplangatemanuel-bit",
   linkedin_url: "",
-  avatar_url: ""
+  avatar_url: "",
+  resume_url: ""
 };
