@@ -1,57 +1,76 @@
 # Emanuel Kiplangat Kirui — Developer Portfolio
 
-A public developer portfolio with a private content-management area at `/admin/login`.
+A responsive public developer portfolio with a private content-management area at `/admin/login`.
 
 ## Stack
 
 - Next.js App Router + TypeScript
 - Tailwind CSS v4
-- Supabase Auth (email/password) and PostgreSQL with Row Level Security
+- Supabase Auth and PostgreSQL with Row Level Security
+- Supabase Storage for public CV downloads (administrator-only uploads)
 - Vercel deployment
 
-## Features
+## Public website
 
-- Public profile, biography, skills, education, projects and contact links
-- Admin sign-in and protected dashboard
-- Edit name, headline, biography, phone, email, location, profile image URL and social links
-- Create, edit, publish, unpublish and delete projects
-- Server-side authorization plus database RLS policies
+- Profile, biography and contact links
+- Featured and published projects with live/repository links
+- Skills grouped by category
+- Education history
+- Optional downloadable CV
+- Responsive layouts and metadata for sharing/search
+
+## Private CMS
+
+- Admin sign-in at `/admin/login`
+- Edit profile, biography, location and contact/social links
+- Create, edit, publish/unpublish and delete projects
+- Create, edit and delete skills and education records
+- Upload a public PDF CV (maximum 5 MB)
+- Server-side administrator authorization and database/storage RLS
 
 ## Local setup
 
-1. Install Node.js 20.9 or later.
-2. Install dependencies: `npm install`.
-3. Copy `.env.example` to `.env.local` and fill in your dedicated Supabase project's URL and publishable key.
-4. Run `supabase/schema.sql` in that project's SQL Editor.
-5. Create your admin user in Supabase Authentication.
-6. In the Supabase SQL Editor, set the administrator role on that one Auth user (replace the email):
+1. Install Node.js 20.9 or later (Node.js 24 LTS is recommended).
+2. Clone the repository and install dependencies:
+   ```bash
+   git clone https://github.com/kiiplangatemanuel-bit/emanuel-kiplangat-portfolio.git
+   cd emanuel-kiplangat-portfolio
+   npm install
+   ```
+3. Copy `.env.example` to `.env.local` and add the URL and publishable key from the dedicated portfolio Supabase project.
+4. Run `supabase/schema.sql` in that project's SQL Editor if setting up a new database. The existing configured project already has the base schema and CV storage migration.
+5. Create the administrator user in Supabase Authentication using the invite flow.
+6. In the Supabase SQL Editor, grant the role to the exact Auth user email after the user has accepted the invite:
    ```sql
    update auth.users
    set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || '{"role":"portfolio_admin"}'::jsonb
    where email = 'your-admin-email@example.com';
    ```
 7. Set `ADMIN_EMAILS` to the same exact email address.
-8. Run `npm run dev`.
+8. Start the development server:
+   ```bash
+   npm run dev
+   ```
+9. Open `http://localhost:3000`. The CMS is at `http://localhost:3000/admin/login`.
 
-## Deploy to Vercel
-
-Import this repository into Vercel and add these environment variables to the Production environment:
+## Environment variables
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
-- `ADMIN_EMAILS`
-- `NEXT_PUBLIC_SITE_URL` (optional)
+- `ADMIN_EMAILS` (server-side allowlist)
+- `NEXT_PUBLIC_SITE_URL` (optional; use the actual production URL)
 
-Deploy after the Supabase schema and administrator role are configured.
+Never put a Supabase service-role or secret key in a `NEXT_PUBLIC_` variable.
 
-## Security notes
+## Security
 
-- Use a separate Supabase project for the portfolio; never reuse OneCore production database credentials.
-- Only a Supabase Auth user with `app_metadata.role = portfolio_admin` and an email in `ADMIN_EMAILS` can enter the dashboard.
-- The public website can only read public profile content and published projects.
+- Use the dedicated portfolio Supabase project; never reuse OneCore production database credentials.
+- Admin access requires both `app_metadata.role = portfolio_admin` and an email in `ADMIN_EMAILS`.
+- Public visitors can read the public profile, published projects, skills, education and public CV.
+- Only the portfolio administrator can upload, replace or delete files in the portfolio-assets bucket.
+- The CV bucket accepts PDF and the configured public asset bucket is limited to 5 MB per file.
 - No service-role key is used in browser code.
-- Keep the administrator account protected with a strong unique password and MFA where available.
 
-## Current scope
+## Verification
 
-The first CMS iteration supports profile/contact editing and full project create, edit, publish/unpublish and delete workflows. Dedicated forms for managing skills, education, CV uploads and direct media uploads are the next increment.
+GitHub Actions runs ESLint, TypeScript checks and a production build on pushes and pull requests to `main`. A green workflow is required before considering a change verified.
