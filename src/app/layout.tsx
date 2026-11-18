@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "./globals.css";\nimport PortfolioAnalytics from "@/components/portfolio-analytics";
 
 const siteUrl = "https://emanuel-kiplangat-portfolio.vercel.app";
 export const metadata: Metadata = {
@@ -15,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" suppressHydrationWarning><body>{children}</body></html>;
+  return <html lang="en" suppressHydrationWarning><body>{children}<PortfolioAnalytics/></body></html>;
 }
