@@ -11,9 +11,35 @@ export default function ProjectGalleryUpload({projectId,currentUrls,currentCover
   const router=useRouter();
   const [files,setFiles]=useState<File[]>([]);
   const [urls,setUrls]=useState(currentUrls);
+  const [coverUrl,setCoverUrl]=useState(currentCoverUrl);
+  const [coverFile,setCoverFile]=useState<File|null>(null);
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState("");
   const [error,setError]=useState("");
+  function chooseCover(event:ChangeEvent<HTMLInputElement>){
+    const selected=event.target.files?.[0]??null;
+    setError("");setMessage("");
+    if(selected&&(!["image/jpeg","image/png","image/webp"].includes(selected.type)||selected.size>5*1024*1024)){
+      setError("Choose a JPG, PNG or WebP cover image no larger than 5 MB.");setCoverFile(null);event.target.value="";return;
+    }
+    setCoverFile(selected);
+  }
+  async function uploadCover(){
+    if(!coverFile)return;
+    setBusy(true);setError("");setMessage("");
+    try{
+      const supabase=createClient();
+      const safe=coverFile.name.toLowerCase().replace(/[^a-z0-9.-]+/g,"-");
+      const path=`projects/${projectId}/cover-${Date.now()}-${crypto.randomUUID()}-${safe}`;
+      const {error:uploadError}=await supabase.storage.from("portfolio-assets").upload(path,coverFile,{contentType:coverFile.type,cacheControl:"3600",upsert:false});
+      if(uploadError)throw uploadError;
+      const publicUrl=supabase.storage.from("portfolio-assets").getPublicUrl(path).data.publicUrl;
+      const {error:saveError}=await supabase.from("portfolio_projects").update({image_url:publicUrl,updated_at:new Date().toISOString()}).eq("id",projectId);
+      if(saveError)throw saveError;
+      setCoverUrl(publicUrl);setCoverFile(null);setMessage("Project cover image uploaded and saved.");router.refresh();
+    }catch(err){setError(err instanceof Error?err.message:"Unable to upload project cover image.");}
+    finally{setBusy(false);}
+  }
   function choose(event:ChangeEvent<HTMLInputElement>){
     const selected=Array.from(event.target.files??[]);
     setError("");setMessage("");
