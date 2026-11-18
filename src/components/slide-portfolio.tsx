@@ -1,6 +1,7 @@
 "use client";
 
-import Image from "next/image";\nimport Link from "next/link";
+import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { TouchEvent } from "react";
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, Github, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
