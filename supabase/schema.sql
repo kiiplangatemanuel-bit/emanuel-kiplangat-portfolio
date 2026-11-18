@@ -84,8 +84,38 @@ create policy "Admins manage education" on public.portfolio_education for all to
   using ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin')
   with check ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
 
-insert into public.portfolio_profile (id) values (1) on conflict (id) do nothing;
+insert into public.portfolio_profile (id, full_name, headline, bio, location, github_url)
+values (
+  1,
+  'Emanuel Kiplangat Kirui',
+  'Software Developer · Full-Stack Development',
+  'I build practical software solutions, web applications and integrated business systems. I am an Information Technology undergraduate at Karatina University, interested in software engineering, enterprise systems and modern web technologies.',
+  'Kenya',
+  'https://github.com/kiiplangatemanuel-bit'
+) on conflict (id) do nothing;
+
+insert into public.portfolio_education (institution, qualification, start_year, end_year, details, sort_order)
+select 'Karatina University', 'Bachelor of Science in Information Technology', '', '2027', 'Undergraduate studies; expected graduation in 2027.', 1
+where not exists (
+  select 1 from public.portfolio_education
+  where institution = 'Karatina University'
+    and qualification = 'Bachelor of Science in Information Technology'
+);
+
+insert into public.portfolio_projects (title, slug, summary, description, technologies, live_url, repo_url, featured, published, sort_order)
+values (
+  'OneCore Digital Hub',
+  'onecore-digital-hub',
+  'An enterprise-oriented digital platform bringing business operations and industry workflows together.',
+  'A practical software project focused on connected business operations, application workflows and integrated digital services.',
+  '{}',
+  'https://onecore-digital-hub.vercel.app/',
+  'https://github.com/kiiplangatemanuel-bit/onecore-digital-hub',
+  true,
+  true,
+  1
+) on conflict (slug) do nothing;
 
 -- Create your admin user in Supabase Auth, then set app_metadata.role to
--- "portfolio_admin" using the Supabase dashboard or a trusted server-side admin tool.
+-- "portfolio_admin" using the SQL example in README.md.
 -- Never put the service_role key in a NEXT_PUBLIC_ environment variable.
