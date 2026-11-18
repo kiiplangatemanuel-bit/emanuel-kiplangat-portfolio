@@ -5,7 +5,7 @@ A public developer portfolio with a private content-management area at `/admin/l
 ## Stack
 
 - Next.js App Router + TypeScript
-- Tailwind CSS
+- Tailwind CSS v4
 - Supabase Auth (email/password) and PostgreSQL with Row Level Security
 - Vercel deployment
 
@@ -13,8 +13,8 @@ A public developer portfolio with a private content-management area at `/admin/l
 
 - Public profile, biography, skills, education, projects and contact links
 - Admin sign-in and protected dashboard
-- Edit name, headline, biography, phone, email, location and social links
-- Add and delete projects, control whether a project is published
+- Edit name, headline, biography, phone, email, location, profile image URL and social links
+- Create, edit, publish, unpublish and delete projects
 - Server-side authorization plus database RLS policies
 
 ## Local setup
@@ -24,8 +24,13 @@ A public developer portfolio with a private content-management area at `/admin/l
 3. Copy `.env.example` to `.env.local` and fill in your dedicated Supabase project's URL and publishable key.
 4. Run `supabase/schema.sql` in that project's SQL Editor.
 5. Create your admin user in Supabase Authentication.
-6. Set that user's **app_metadata** role to `portfolio_admin` using a trusted admin-side mechanism. Do not set authorization roles in user-editable metadata.
-7. Set `ADMIN_EMAILS` to the exact admin email address.
+6. In the Supabase SQL Editor, set the administrator role on that one Auth user (replace the email):
+   ```sql
+   update auth.users
+   set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || '{"role":"portfolio_admin"}'::jsonb
+   where email = 'your-admin-email@example.com';
+   ```
+7. Set `ADMIN_EMAILS` to the same exact email address.
 8. Run `npm run dev`.
 
 ## Deploy to Vercel
@@ -49,4 +54,4 @@ Deploy after the Supabase schema and administrator role are configured.
 
 ## Current scope
 
-The first CMS iteration includes profile/contact editing and project creation/deletion. Dedicated forms for editing skills, education, CV uploads, image uploads and full project editing are planned as the next implementation increment.
+The first CMS iteration supports profile/contact editing and full project create, edit, publish/unpublish and delete workflows. Dedicated forms for managing skills, education, CV uploads and direct media uploads are the next increment.
