@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Github, Linkedin, Mail, MapPin, Sparkles, BriefcaseBusiness, Award, BookOpen, Code2 } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Github, Linkedin, Mail, MapPin, Sparkles, BriefcaseBusiness, Award, BookOpen, Code2 } from "lucide-react";
 import { getPortfolioData } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 import ThemeToggle from "@/components/theme-toggle";
