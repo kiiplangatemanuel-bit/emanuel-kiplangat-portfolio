@@ -21,7 +21,7 @@ function payload(kind:Kind,formData:FormData){
   if(kind==="certification") return {name:value(formData,"title"),issuer:value(formData,"organization"),issue_date:value(formData,"start_date"),credential_url:value(formData,"url"),description:value(formData,"description"),sort_order,published};
   if(kind==="post") return {title:value(formData,"title"),slug:value(formData,"slug")||value(formData,"title").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""),excerpt:value(formData,"excerpt"),content:value(formData,"description"),tags:value(formData,"tags").split(",").map(x=>x.trim()).filter(Boolean),published,published_at:published?new Date().toISOString():null,updated_at:new Date().toISOString()};
   if(kind==="service") return {title:value(formData,"title"),description:value(formData,"description"),sort_order,published};
-  return {quote:value(formData,"description"),person_name:value(formData,"title"),person_role:value(formData,"organization"),organization:value(formData,"start_date"),sort_order,published};
+  return {quote:value(formData,"description"),person_name:value(formData,"title"),person_role:value(formData,"person_role"),organization:value(formData,"organization"),sort_order,published};
 }
 
 export async function saveContent(formData:FormData){
