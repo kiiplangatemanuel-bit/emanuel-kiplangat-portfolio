@@ -147,18 +147,18 @@ set public = excluded.public,
 drop policy if exists "Portfolio admins can upload portfolio assets" on storage.objects;
 create policy "Portfolio admins can upload portfolio assets"
 on storage.objects for insert to authenticated
-with check (bucket_id = 'portfolio-assets' and (select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+with check (bucket_id = 'portfolio-assets' and ((select auth.jwt())->'app_metadata'->>'role') = 'portfolio_admin');
 
 drop policy if exists "Portfolio admins can update portfolio assets" on storage.objects;
 create policy "Portfolio admins can update portfolio assets"
 on storage.objects for update to authenticated
-using (bucket_id = 'portfolio-assets' and (select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin')
-with check (bucket_id = 'portfolio-assets' and (select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+using (bucket_id = 'portfolio-assets' and ((select auth.jwt())->'app_metadata'->>'role') = 'portfolio_admin')
+with check (bucket_id = 'portfolio-assets' and ((select auth.jwt())->'app_metadata'->>'role') = 'portfolio_admin');
 
 drop policy if exists "Portfolio admins can delete portfolio assets" on storage.objects;
 create policy "Portfolio admins can delete portfolio assets"
 on storage.objects for delete to authenticated
-using (bucket_id = 'portfolio-assets' and (select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+using (bucket_id = 'portfolio-assets' and ((select auth.jwt())->'app_metadata'->>'role') = 'portfolio_admin');
 
 -- Create your admin user in Supabase Auth, then set app_metadata.role to
 -- "portfolio_admin" using the SQL example in README.md.
