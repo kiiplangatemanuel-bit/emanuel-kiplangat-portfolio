@@ -17,6 +17,20 @@ export async function submitEnquiry(_previousState: { ok: boolean; message: stri
     const supabase = await createClient();
     const { error } = await supabase.from("portfolio_enquiries").insert({name,email,subject,message,enquiry_type});
     if (error) throw error;
+    if (process.env.RESEND_API_KEY && process.env.CONTACT_NOTIFICATION_EMAIL) {
+      const safe = (text: string) => text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          from: process.env.RESEND_FROM_EMAIL || "Portfolio <onboarding@resend.dev>",
+          to: [process.env.CONTACT_NOTIFICATION_EMAIL],
+          reply_to: email,
+          subject: `Portfolio enquiry: ${subject}`,
+          html: `<h2>New portfolio enquiry</h2><p><strong>From:</strong> ${safe(name)} (${safe(email)})</p><p><strong>Type:</strong> ${safe(enquiry_type)}</p><p><strong>Subject:</strong> ${safe(subject)}</p><p>${safe(message).replace(/\\n/g,"<br>")}</p>`
+        })
+      });
+    }
     return { ok: true, message: "Thanks for reaching out. Your message has been received." };
   } catch {
     return { ok: false, message: "The contact service is temporarily unavailable. Please email me directly." };
