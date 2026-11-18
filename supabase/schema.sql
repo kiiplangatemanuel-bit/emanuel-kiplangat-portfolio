@@ -59,31 +59,43 @@ revoke all on public.portfolio_profile, public.portfolio_projects, public.portfo
 grant select on public.portfolio_profile, public.portfolio_projects, public.portfolio_skills, public.portfolio_education to anon, authenticated;
 grant insert, update, delete on public.portfolio_profile, public.portfolio_projects, public.portfolio_skills, public.portfolio_education to authenticated;
 
-create policy "Public can read profile" on public.portfolio_profile for select to anon, authenticated using (true);
-create policy "Admins can manage profile" on public.portfolio_profile for all to authenticated
-  using ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin')
-  with check ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+create policy "Public can read profile" on public.portfolio_profile
+for select to anon, authenticated using (true);
+create policy "Admins can insert profile" on public.portfolio_profile
+for insert to authenticated with check ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
+create policy "Admins can update profile" on public.portfolio_profile
+for update to authenticated
+using ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin')
+with check ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
 
-create policy "Public can read published projects" on public.portfolio_projects for select to anon, authenticated using (published = true);
-create policy "Admins can read all projects" on public.portfolio_projects for select to authenticated
-  using ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+create policy "Public and admins can read projects" on public.portfolio_projects
+for select to anon, authenticated
+using (published = true or (select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
 create policy "Admins can insert projects" on public.portfolio_projects for insert to authenticated
-  with check ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+with check ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
 create policy "Admins can update projects" on public.portfolio_projects for update to authenticated
-  using ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin')
-  with check ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+using ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin')
+with check ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
 create policy "Admins can delete projects" on public.portfolio_projects for delete to authenticated
-  using ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+using ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
 
 create policy "Public can read skills" on public.portfolio_skills for select to anon, authenticated using (true);
-create policy "Admins manage skills" on public.portfolio_skills for all to authenticated
-  using ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin')
-  with check ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+create policy "Admins can insert skills" on public.portfolio_skills for insert to authenticated
+with check ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
+create policy "Admins can update skills" on public.portfolio_skills for update to authenticated
+using ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin')
+with check ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
+create policy "Admins can delete skills" on public.portfolio_skills for delete to authenticated
+using ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
 
 create policy "Public can read education" on public.portfolio_education for select to anon, authenticated using (true);
-create policy "Admins manage education" on public.portfolio_education for all to authenticated
-  using ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin')
-  with check ((select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+create policy "Admins can insert education" on public.portfolio_education for insert to authenticated
+with check ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
+create policy "Admins can update education" on public.portfolio_education for update to authenticated
+using ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin')
+with check ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
+create policy "Admins can delete education" on public.portfolio_education for delete to authenticated
+using ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
 
 insert into public.portfolio_profile (id, full_name, headline, bio, location, github_url)
 values (
