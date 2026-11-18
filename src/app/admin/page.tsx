@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
 import { defaultProfile } from "@/lib/types";
-import { createProject, deleteProject, saveProfile, signOut } from "./actions";
+import { createProject, deleteProject, saveProfile, signOut, updateProject } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -53,9 +53,29 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         <label className="field" style={{display:"flex",flexDirection:"row",alignItems:"center"}}><input type="checkbox" name="published" defaultChecked/> Publish on public website</label>
         <button className="btn primary">Add project</button>
       </form>
-      <h2 style={{marginTop:36}}>Existing projects</h2>
-      <div className="grid">{(projects ?? []).map(project=><article className="card" key={project.id}><h3>{project.title}</h3><p className="muted">{project.summary}</p><p className="muted">Status: {project.published ? "Published" : "Draft"}</p><form action={deleteProject}><input type="hidden" name="id" value={project.id}/><button className="btn" style={{color:"#fca5a5"}}>Delete project</button></form></article>)}</div>
+      <h2 style={{marginTop:36}}>Manage existing projects</h2>
+      <div className="grid">{(projects ?? []).map(project=><article className="card" key={project.id}>
+        <h3>{project.title}</h3><p className="muted">Current status: {project.published ? "Published" : "Draft"}</p>
+        <details><summary style={{cursor:"pointer",color:"var(--accent)",margin:"14px 0"}}>Edit project details</summary>
+          <form action={updateProject} className="form" style={{marginTop:14}}>
+            <input type="hidden" name="id" value={project.id}/>
+            <label className="field">Title<input name="title" required defaultValue={project.title}/></label>
+            <label className="field">Slug<input name="slug" required defaultValue={project.slug}/></label>
+            <label className="field">Short summary<textarea name="summary" defaultValue={project.summary}/></label>
+            <label className="field">Full description<textarea name="description" defaultValue={project.description}/></label>
+            <label className="field">Technologies (comma separated)<input name="technologies" defaultValue={(project.technologies ?? []).join(", ")}/></label>
+            <label className="field">Live website URL<input name="live_url" type="url" defaultValue={project.live_url}/></label>
+            <label className="field">Repository URL<input name="repo_url" type="url" defaultValue={project.repo_url}/></label>
+            <label className="field">Image URL<input name="image_url" type="url" defaultValue={project.image_url}/></label>
+            <label className="field">Display order<input name="sort_order" type="number" defaultValue={project.sort_order}/></label>
+            <label className="field" style={{display:"flex",flexDirection:"row",alignItems:"center"}}><input type="checkbox" name="featured" defaultChecked={project.featured}/> Featured project</label>
+            <label className="field" style={{display:"flex",flexDirection:"row",alignItems:"center"}}><input type="checkbox" name="published" defaultChecked={project.published}/> Published</label>
+            <button className="btn primary">Save project changes</button>
+          </form>
+        </details>
+        <form action={deleteProject} style={{marginTop:12}}><input type="hidden" name="id" value={project.id}/><button className="btn" style={{color:"#fca5a5"}}>Delete project</button></form>
+      </article>)}</div>
     </section>
-    <p className="muted" style={{marginTop:24}}>Education and skills are displayed publicly when records are added to their corresponding database tables. The next admin iteration can add dedicated editing forms for those sections.</p>
+    <p className="muted" style={{marginTop:24}}>You can manage your public profile, contact information and project portfolio here. Dedicated editing forms for skills, education, CV files and image uploads are planned as the next CMS increment.</p>
   </div></main>;
 }
