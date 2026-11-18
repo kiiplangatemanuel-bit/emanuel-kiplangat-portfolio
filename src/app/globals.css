@@ -212,3 +212,75 @@ h1 { font-size:clamp(46px,6.4vw,78px); line-height:1.04; letter-spacing:-.075em;
 .asset-placeholder { display:grid; place-items:center; color:var(--accent); font-size:22px; font-weight:900; }
 .asset-current strong { font-size:14px; }
 .asset-current .muted { margin:4px 0 0; font-size:11px; }
+
+
+/* Hybrid full-screen slide portfolio */
+.slide-portfolio { min-height:100svh; overflow:hidden; }
+.slide-shell { min-height:100svh; display:flex; flex-direction:column; position:relative; }
+.slide-nav { flex:none; }
+.slide-nav .navlinks button { border:0; padding:8px 0; color:#b3c1d2; background:transparent; cursor:pointer; font:inherit; transition:color .2s ease; }
+.slide-nav .navlinks button:hover,.slide-nav .navlinks button.active { color:var(--accent); }
+.slide-nav .nav-cta { color:inherit; background:transparent; cursor:pointer; font:inherit; }
+.slide-progress { position:absolute; z-index:21; top:81px; left:0; right:0; height:2px; background:rgba(164,190,220,.08); }
+.slide-progress span { display:block; height:100%; background:var(--accent); transition:width .55s cubic-bezier(.22,.75,.2,1); }
+.slide-track-viewport { flex:1; min-height:0; overflow:hidden; position:relative; }
+.slide-track { height:100%; min-height:calc(100svh - 142px); display:flex; transition:transform .72s cubic-bezier(.22,.75,.2,1); will-change:transform; outline:none; }
+.portfolio-slide { flex:0 0 100%; width:100%; min-width:0; min-height:calc(100svh - 142px); max-height:calc(100svh - 142px); overflow-y:auto; overflow-x:hidden; scrollbar-width:thin; scrollbar-color:rgba(120,229,195,.3) transparent; }
+.portfolio-slide.hero { min-height:calc(100svh - 142px); max-height:calc(100svh - 142px); padding:clamp(34px,5vh,70px) 0 60px; grid-template-columns:1.15fr .85fr; }
+.portfolio-slide.intro-strip { align-content:center; padding:clamp(45px,9vh,110px) 0; }
+.portfolio-slide.section { padding:clamp(32px,5vh,68px) 0; display:flex; flex-direction:column; justify-content:center; }
+.portfolio-slide#projects { justify-content:flex-start; }
+.portfolio-slide#projects .project-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.portfolio-slide#projects .project-art,.portfolio-slide#projects .project-placeholder,.portfolio-slide#projects .project-image { min-height:clamp(150px,24vh,245px); }
+.portfolio-slide#projects .project-content { padding:clamp(14px,2vw,24px); }
+.portfolio-slide#projects .project-content h3 { font-size:clamp(17px,2vw,23px); }
+.portfolio-slide#projects .project-content .muted { font-size:12px; }
+.portfolio-slide#skills .skills-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.portfolio-slide#education .education-list { max-width:900px; width:100%; }
+.contact-slide { display:flex; flex-direction:column; justify-content:center; padding-top:24px; }
+.contact-slide .contact-section { margin:20px 0 24px; padding:clamp(30px,6vh,70px) 8%; }
+.contact-slide .footer { flex:none; }
+.slide-inline-actions { margin-top:25px; }
+.slide-controls { display:flex; align-items:center; justify-content:center; gap:17px; padding:10px 0 5px; flex:none; }
+.slide-arrow { width:36px; height:36px; display:grid; place-items:center; border:1px solid var(--line); border-radius:50%; background:rgba(255,255,255,.025); color:var(--text); cursor:pointer; transition:border-color .2s ease,color .2s ease,opacity .2s ease; }
+.slide-arrow:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); }
+.slide-arrow:disabled { opacity:.28; cursor:not-allowed; }
+.slide-dots { display:flex; align-items:center; gap:8px; }
+.slide-dots button { width:7px; height:7px; padding:0; border:0; border-radius:99px; background:#506176; cursor:pointer; transition:width .25s ease,background .25s ease; }
+.slide-dots button.current { width:23px; background:var(--accent); }
+.slide-count { min-width:48px; color:#d8e5f1; font-size:11px; font-variant-numeric:tabular-nums; }
+.slide-count i { color:#6d8299; font-style:normal; padding:0 3px; }
+.slide-hint { flex:none; margin:0; padding:0 0 10px; color:#647b94; text-align:center; font-size:9px; letter-spacing:.04em; }
+.slide-track-viewport { touch-action:pan-y; }
+.slide-controls button:focus-visible,.slide-nav button:focus-visible,.slide-nav a:focus-visible,.slide-track a:focus-visible,.slide-track button:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+@media(max-width:820px) {
+  .portfolio-slide.hero { grid-template-columns:1fr; gap:8px; padding:35px 0 55px; }
+  .portfolio-slide.hero .hero-visual { min-height:300px; }
+  .portfolio-slide#skills .skills-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:620px) {
+  .slide-nav { min-height:66px; }
+  .slide-progress { top:65px; }
+  .slide-nav .navlinks { gap:12px; }
+  .slide-nav .navlinks button { white-space:nowrap; }
+  .slide-track { min-height:calc(100svh - 130px); }
+  .portfolio-slide { min-height:calc(100svh - 130px); max-height:calc(100svh - 130px); }
+  .portfolio-slide.hero { min-height:calc(100svh - 130px); max-height:calc(100svh - 130px); padding:38px 0 45px; }
+  .portfolio-slide.hero .hero-visual { min-height:275px; }
+  .portfolio-slide.intro-strip { grid-template-columns:1fr; gap:18px; padding:55px 0; }
+  .portfolio-slide.section { padding:34px 0; justify-content:flex-start; }
+  .portfolio-slide#projects .project-grid { grid-template-columns:1fr; }
+  .portfolio-slide#projects .project-art,.portfolio-slide#projects .project-placeholder,.portfolio-slide#projects .project-image { min-height:170px; }
+  .portfolio-slide#skills .skills-grid { grid-template-columns:1fr; }
+  .portfolio-slide#education .education-item { grid-template-columns:1fr auto; }
+  .portfolio-slide#education .education-date { grid-column:1/-1; }
+  .contact-slide { justify-content:flex-start; padding-top:15px; }
+  .contact-slide .contact-section { padding:40px 22px; margin:18px 0; }
+  .contact-slide .footer { padding:16px 0 22px; }
+  .slide-controls { gap:11px; }
+  .slide-arrow { width:33px; height:33px; }
+  .slide-hint { font-size:8px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .slide-track,.slide-progress span,.slide-dots button { transition:none !important; }
+}
