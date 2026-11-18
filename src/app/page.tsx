@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowDown, ArrowUpRight, Github, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
 import { getPortfolioData } from "@/lib/data";
 
@@ -36,7 +37,7 @@ export default async function HomePage() {
           <div className="hero-visual">
             <div className="visual-orbit orbit-one"/><div className="visual-orbit orbit-two"/>
             <div className="profile-card">
-              {profile.avatar_url ? <img className="avatar" src={profile.avatar_url} alt={profile.full_name}/> : <div className="avatar avatar-initials">{initials}</div>}
+              {profile.avatar_url ? <Image className="avatar" src={profile.avatar_url} alt={profile.full_name} width={600} height={510} unoptimized/> : <div className="avatar avatar-initials">{initials}</div>}
               <div className="profile-card-copy"><div className="eyebrow">Hello, I’m</div><h2>{profile.full_name}</h2><p>{profile.headline}</p></div>
               <div className="profile-card-footer"><span className="status-dot"/> Creating, learning, improving</div>
             </div>
@@ -56,7 +57,7 @@ export default async function HomePage() {
           <div className="project-grid">
             {projects.map((project, index) => <article className="project-card" key={project.id}>
               <div className="project-art">
-                {project.image_url ? <img className="project-image" src={project.image_url} alt={project.title + " project preview"}/> : <div className={"project-placeholder project-placeholder-" + (index % 3)}><span>{String(index + 1).padStart(2,"0")}</span><div className="placeholder-window"><i/><i/><i/><b>{project.title}</b><small>{project.technologies?.slice(0,3).join(" · ") || "Digital product"}</small></div></div>}
+                {project.image_url ? <Image className="project-image" src={project.image_url} alt={project.title + " project preview"} width={960} height={540} unoptimized/> : <div className={"project-placeholder project-placeholder-" + (index % 3)}><span>{String(index + 1).padStart(2,"0")}</span><div className="placeholder-window"><i/><i/><i/><b>{project.title}</b><small>{project.technologies?.slice(0,3).join(" · ") || "Digital product"}</small></div></div>}
                 {project.featured && <span className="featured-label">Featured project</span>}
               </div>
               <div className="project-content"><div className="project-index">PROJECT / {String(index + 1).padStart(2,"0")}</div><h3>{project.title}</h3><p className="muted">{project.summary}</p>
