@@ -10,7 +10,7 @@ import type { Education, Profile, Project, Skill } from "@/lib/types";
 type Props = { profile: Profile; projects: Project[]; skills: Skill[]; education: Education[] };
 
 function getWhatsAppNumber(phone: string) {
-  const digits = phone.replace(/\\D/g, "");
+  const digits = phone.replace(/\D/g, "");
   if (digits.startsWith("0")) return "254" + digits.slice(1);
   if (digits.startsWith("254")) return digits;
   if (digits.startsWith("7") || digits.startsWith("1")) return "254" + digits;
