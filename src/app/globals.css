@@ -205,3 +205,10 @@ h1 { font-size:clamp(46px,6.4vw,78px); line-height:1.04; letter-spacing:-.075em;
   .resume-current { align-items:flex-start; flex-direction:column; }
   .inline-edit { grid-template-columns:1fr; }
 }
+
+.asset-upload { display:grid; gap:14px; margin-top:20px; padding:18px; border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,.018); }
+.asset-current { display:flex; align-items:center; gap:15px; }
+.asset-current img,.asset-placeholder { width:76px; height:76px; border-radius:14px; object-fit:cover; background:#15344a; }
+.asset-placeholder { display:grid; place-items:center; color:var(--accent); font-size:22px; font-weight:900; }
+.asset-current strong { font-size:14px; }
+.asset-current .muted { margin:4px 0 0; font-size:11px; }
