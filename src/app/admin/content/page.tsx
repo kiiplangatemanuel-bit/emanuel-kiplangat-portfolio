@@ -30,19 +30,19 @@ export default async function ContentAdmin({searchParams}:{searchParams:Promise<
   {sections.map(section=><section className="admin-panel" key={section.kind}><div className="section-kicker">CONTENT / {section.kind.toUpperCase()}</div><h2>{section.title}</h2><p className="muted">{section.hint}</p>
    <details className="cms-create"><summary>Add {section.kind}</summary><form action={saveContent} className="form"><input type="hidden" name="kind" value={section.kind}/>
     <label className="field">{section.titleLabel}<input name="title" required/></label>
-    {("orgLabel" in section)&&<label className="field">{section.orgLabel}<input name={section.kind==="post"?"slug":section.kind==="certification"?"organization":"organization"}/></label>}
-    {("dateLabel" in section)&&<label className="field">{section.dateLabel}<input name={section.kind==="post"?"tags":"start_date"}/></label>}
+    {section.kind==="testimonial"?<><label className="field">Role<input name="person_role"/></label><label className="field">Organization<input name="organization"/></label></>:("orgLabel" in section)&&<label className="field">{section.orgLabel}<input name={section.kind==="post"?"slug":"organization"}/></label>}
+    {section.kind!=="testimonial"&&("dateLabel" in section)&&<label className="field">{section.dateLabel}<input name={section.kind==="post"?"tags":"start_date"}/></label>}
     {section.kind==="experience"&&<label className="field">End date<input name="end_date" placeholder="Present"/></label>}
     {section.kind==="certification"&&<label className="field">Credential URL<input name="url" type="url"/></label>}
     {section.kind==="post"&&<label className="field">Short excerpt<input name="excerpt" required/></label>}
     <label className="field">{section.descLabel}<textarea name="description" rows={section.kind==="post"?10:4} required/></label>
     {section.kind!=="service"&&<label className="field">Display order<input name="sort_order" type="number" defaultValue="0"/></label>}
-    <label className="check-field"><input type="checkbox" name="published" defaultChecked={section.kind!=="testimonial"}/> Publish publicly</label>
+    <label className="check-field"><input type="checkbox" name="published" defaultChecked={section.kind!=="testimonial" && section.kind!=="post"}/> Publish publicly</label>
     <button className="btn primary">Save {section.kind}</button></form></details>
    <div className="cms-list">{data[section.kind].map(row=><article className="cms-item" key={row.id}><div className="cms-item-heading"><div><h3>{row.title||row.name||row.role||row.person_name}</h3><p className="muted">{row.published?"Published":"Draft"}</p></div></div><details><summary>Edit item</summary><form action={saveContent} className="form cms-edit-form"><input type="hidden" name="kind" value={section.kind}/><input type="hidden" name="id" value={row.id}/>
     <label className="field">{section.titleLabel}<input name="title" required defaultValue={row.title||row.name||row.role||row.person_name||""}/></label>
-    {("orgLabel" in section)&&<label className="field">{section.orgLabel}<input name={section.kind==="post"?"slug":"organization"} defaultValue={row.slug||row.organization||row.issuer||row.person_role||""}/></label>}
-    {("dateLabel" in section)&&<label className="field">{section.dateLabel}<input name={section.kind==="post"?"tags":"start_date"} defaultValue={section.kind==="post"?(row.tags||[]).join(", "):row.start_date||row.issue_date||""}/></label>}
+    {section.kind==="testimonial"?<><label className="field">Role<input name="person_role" defaultValue={row.person_role||""}/></label><label className="field">Organization<input name="organization" defaultValue={row.organization||""}/></label></>:("orgLabel" in section)&&<label className="field">{section.orgLabel}<input name={section.kind==="post"?"slug":"organization"} defaultValue={row.slug||row.organization||row.issuer||""}/></label>}
+    {section.kind!=="testimonial"&&("dateLabel" in section)&&<label className="field">{section.dateLabel}<input name={section.kind==="post"?"tags":"start_date"} defaultValue={section.kind==="post"?(row.tags||[]).join(", "):row.start_date||row.issue_date||""}/></label>}
     {section.kind==="experience"&&<label className="field">End date<input name="end_date" defaultValue={row.end_date||""}/></label>}
     {section.kind==="certification"&&<label className="field">Credential URL<input name="url" type="url" defaultValue={row.credential_url||""}/></label>}
     {section.kind==="post"&&<label className="field">Short excerpt<input name="excerpt" defaultValue={row.excerpt||""}/></label>}
