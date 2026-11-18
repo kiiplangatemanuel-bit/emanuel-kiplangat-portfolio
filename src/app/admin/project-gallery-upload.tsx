@@ -11,6 +11,36 @@ export default function ProjectGalleryUpload({projectId,currentUrls,currentCover
   const router=useRouter();
   const [files,setFiles]=useState<File[]>([]);
   const [urls,setUrls]=useState(currentUrls);
+  const [coverUrl,setCoverUrl]=useState(currentCoverUrl);
+  const [coverFile,setCoverFile]=useState<File|null>(null);
+  const [busy,setBusy]=useState(false);
+  const [message,setMessage]=useState("");
+  const [error,setError]=useState("");
+  function chooseCover(event:ChangeEvent<HTMLInputElement>){
+    const selected=event.target.files?.[0]??null;
+    setError("");setMessage("");
+    if(selected&&(!["image/jpeg","image/png","image/webp"].includes(selected.type)||selected.size>5*1024*1024)){
+      setError("Choose a JPG, PNG or WebP cover image no larger than 5 MB.");setCoverFile(null);event.target.value="";return;
+    }
+    setCoverFile(selected);
+  }
+  async function uploadCover(){
+    if(!coverFile)return;
+    setBusy(true);setError("");setMessage("");
+    try{
+      const supabase=createClient();
+      const safe=coverFile.name.toLowerCase().replace(/[^a-z0-9.-]+/g,"-");
+      const path=`projects/${projectId}/cover-${Date.now()}-${crypto.randomUUID()}-${safe}`;
+      const {error:uploadError}=await supabase.storage.from("portfolio-assets").upload(path,coverFile,{contentType:coverFile.type,cacheControl:"3600",upsert:false});
+      if(uploadError)throw uploadError;
+      const publicUrl=supabase.storage.from("portfolio-assets").getPublicUrl(path).data.publicUrl;
+      const {error:saveError}=await supabase.from("portfolio_projects").update({image_url:publicUrl,updated_at:new Date().toISOString()}).eq("id",projectId);
+      if(saveError)throw saveError;
+      setCoverUrl(publicUrl);setCoverFile(null);setMessage("Project cover image uploaded and saved.");router.refresh();
+    }catch(err){setError(err instanceof Error?err.message:"Unable to upload project cover image.");}
+    finally{setBusy(false);}
+  }
+
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState("");
   const [error,setError]=useState("");
@@ -45,6 +75,13 @@ export default function ProjectGalleryUpload({projectId,currentUrls,currentCover
     finally{setBusy(false);}
   }
   return <div className="asset-upload project-gallery-upload">
+    <strong>Project cover image</strong>
+    <p className="muted">Upload or replace the main image shown for this project. JPG, PNG or WebP, maximum 5 MB.</p>
+    {coverUrl&&<div className="project-upload-preview"><div><Image src={coverUrl} alt="Project cover image" width={240} height={150} unoptimized/><span>Current cover</span></div></div>}
+    <label className="field">Choose cover image<input type="file" accept="image/jpeg,image/png,image/webp" onChange={chooseCover}/></label>
+    {coverFile&&<p className="muted">{coverFile.name} selected.</p>}
+    <button type="button" className="btn primary" disabled={!coverFile||busy} onClick={uploadCover}>{busy?"Uploading…":"Upload cover image"}</button>
+    <hr/>
     <strong>Project screenshots</strong>
     <p className="muted">Upload JPG, PNG or WebP files (maximum 5 MB each). The first uploaded image also becomes the cover if no cover is set.</p>
     {urls.length>0&&<div className="project-upload-preview">{urls.map((url,index)=><div key={url+index}><Image src={url} alt={`Project screenshot ${index+1}`} width={180} height={112} unoptimized/><span>Screenshot {index+1}</span></div>)}</div>}
