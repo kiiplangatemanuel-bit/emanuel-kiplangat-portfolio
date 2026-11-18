@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { TouchEvent } from "react";
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, Github, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
 import type { Education, Profile, Project, Skill } from "@/lib/types";
 
@@ -51,7 +52,7 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
     return () => { window.removeEventListener("keydown", onKeyDown); window.removeEventListener("hashchange", onHash); };
   }, [goTo]);
 
-  const onTouchStart = (event: React.TouchEvent) => { const touch = event.touches[0]; touchStart.current = { x: touch.clientX, y: touch.clientY }; };
+  const onTouchStart = (event: TouchEvent) => { const touch = event.touches[0]; touchStart.current = { x: touch.clientX, y: touch.clientY }; };
   const onTouchEnd = (event: React.TouchEvent) => {
     if (!touchStart.current) return;
     const touch = event.changedTouches[0];
