@@ -37,7 +37,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         <div className="grid">
           <label className="field">Full name<input name="full_name" required defaultValue={p.full_name}/></label>
           <label className="field">Professional headline<input name="headline" defaultValue={p.headline}/></label>
-          <label className="field">Location<input name="location" defaultValue={p.location}/></label>
+          <label className="field">Location<input name="location" defaultValue={p.location}/></label>\n          <label className="field">Availability status<input name="availability_status" defaultValue={p.availability_status ?? "Open to internships and collaboration"}/></label>\n          <label className="field">Website URL<input name="website_url" type="url" defaultValue={p.website_url ?? ""}/></label>
           <label className="field">Public email<input name="email" type="email" defaultValue={p.email}/></label>
           <label className="field">Phone number<input name="phone" type="tel" defaultValue={p.phone}/></label>
           <label className="field">Profile image URL<input name="avatar_url" type="url" defaultValue={p.avatar_url}/></label>
@@ -65,7 +65,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
             <label className="field">Technologies (comma separated)<input name="technologies" placeholder="Next.js, TypeScript, PostgreSQL"/></label>
             <label className="field">Live website URL<input name="live_url" type="url"/></label>
             <label className="field">Repository URL<input name="repo_url" type="url"/></label>
-            <label className="field">Project image URL<input name="image_url" type="url"/></label>
+            <label className="field">Project image URL<input name="image_url" type="url"/></label>\n            <label className="field">Problem being solved<textarea name="problem"/></label>\n            <label className="field">Your role and contributions<textarea name="role_and_contributions"/></label>\n            <label className="field">Challenges and solutions<textarea name="challenges_and_solutions"/></label>\n            <label className="field">Outcomes / learnings<textarea name="outcomes"/></label>\n            <label className="field">Additional screenshot URLs (comma separated)<input name="gallery_urls"/></label>
           </div>
           <label className="field">Short summary<textarea name="summary" required/></label>
           <label className="field">Full description<textarea name="description"/></label>
@@ -86,7 +86,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
               <label className="field">Technologies<input name="technologies" defaultValue={(project.technologies ?? []).join(", ")}/></label>
               <label className="field">Live website URL<input name="live_url" type="url" defaultValue={project.live_url}/></label>
               <label className="field">Repository URL<input name="repo_url" type="url" defaultValue={project.repo_url}/></label>
-              <label className="field">Image URL<input name="image_url" type="url" defaultValue={project.image_url}/></label>
+              <label className="field">Image URL<input name="image_url" type="url" defaultValue={project.image_url}/></label>\n              <label className="field">Problem being solved<textarea name="problem" defaultValue={project.problem ?? ""}/></label>\n              <label className="field">Your role and contributions<textarea name="role_and_contributions" defaultValue={project.role_and_contributions ?? ""}/></label>\n              <label className="field">Challenges and solutions<textarea name="challenges_and_solutions" defaultValue={project.challenges_and_solutions ?? ""}/></label>\n              <label className="field">Outcomes / learnings<textarea name="outcomes" defaultValue={project.outcomes ?? ""}/></label>\n              <label className="field">Additional screenshot URLs (comma separated)<input name="gallery_urls" defaultValue={(project.gallery_urls ?? []).join(", ")}/></label>
               <label className="field">Display order<input name="sort_order" type="number" defaultValue={project.sort_order}/></label>
             </div>
             <label className="field">Short summary<textarea name="summary" defaultValue={project.summary}/></label>
@@ -106,7 +106,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         <form action={createSkill} className="form">
           <div className="grid">
             <label className="field">Skill name<input name="name" required placeholder="TypeScript"/></label>
-            <label className="field">Category<input name="category" defaultValue="Technology" placeholder="Development"/></label>
+            <label className="field">Category<input name="category" defaultValue="Technology" placeholder="Frontend development"/></label>\n            <label className="field">Proficiency (honest self-assessment)<select name="proficiency" defaultValue=""><option value="">Not specified</option><option>Learning</option><option>Familiar</option><option>Working knowledge</option><option>Confident</option></select></label>
             <label className="field">Display order<input name="sort_order" type="number" defaultValue="0"/></label>
           </div>
           <button className="btn primary">Add skill</button>
@@ -115,7 +115,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
       <div className="cms-list">{(skills ?? []).map(skill=><article className="cms-item compact" key={skill.id}>
         <form action={updateSkill} className="form inline-edit"><input type="hidden" name="id" value={skill.id}/>
           <label className="field">Skill<input name="name" required defaultValue={skill.name}/></label>
-          <label className="field">Category<input name="category" defaultValue={skill.category}/></label>
+          <label className="field">Category<input name="category" defaultValue={skill.category}/></label>\n          <label className="field">Proficiency<select name="proficiency" defaultValue={skill.proficiency ?? ""}><option value="">Not specified</option><option>Learning</option><option>Familiar</option><option>Working knowledge</option><option>Confident</option></select></label>
           <label className="field">Order<input name="sort_order" type="number" defaultValue={skill.sort_order}/></label>
           <button className="btn primary">Save</button>
         </form>
