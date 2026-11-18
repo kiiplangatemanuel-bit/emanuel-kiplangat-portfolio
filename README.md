@@ -26,6 +26,7 @@ A responsive public developer portfolio with a private content-management area a
 - Create, edit, publish/unpublish and delete projects
 - Create, edit and delete skills and education records
 - Upload a public PDF CV (maximum 5 MB)
+- Upload a public profile photo (JPG, PNG or WebP; maximum 5 MB)
 - Server-side administrator authorization and database/storage RLS
 
 ## Local setup
