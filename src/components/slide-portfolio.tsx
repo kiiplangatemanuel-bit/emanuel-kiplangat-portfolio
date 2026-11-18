@@ -53,7 +53,7 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
   }, [goTo]);
 
   const onTouchStart = (event: TouchEvent) => { const touch = event.touches[0]; touchStart.current = { x: touch.clientX, y: touch.clientY }; };
-  const onTouchEnd = (event: React.TouchEvent) => {
+  const onTouchEnd = (event: TouchEvent) => {
     if (!touchStart.current) return;
     const touch = event.changedTouches[0];
     const dx = touch.clientX - touchStart.current.x;
