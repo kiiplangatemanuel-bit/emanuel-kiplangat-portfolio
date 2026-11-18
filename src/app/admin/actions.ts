@@ -19,7 +19,7 @@ export async function saveProfile(formData: FormData) {
     avatar_url: String(formData.get("avatar_url") ?? "").trim(),
     updated_at: new Date().toISOString()
   };
-  const { error } = await supabase.from("portfolio_profile").upsert(payload);
+  const { error } = await supabase.from("portfolio_profile").update(payload).eq("id", 1);
   if (error) throw new Error(error.message);
   revalidatePath("/");
   revalidatePath("/admin");
