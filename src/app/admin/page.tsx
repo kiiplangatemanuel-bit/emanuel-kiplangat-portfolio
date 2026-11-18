@@ -27,7 +27,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
       <div className="admin-header-actions"><Link className="btn secondary" href="/">View public website ↗</Link><form action={signOut}><button className="btn secondary">Sign out</button></form></div>
     </header>
     <nav className="admin-nav" aria-label="CMS sections">
-      <a className="btn secondary" href="#profile">Profile</a><a className="btn secondary" href="#resume">CV</a><a className="btn secondary" href="#projects">Projects</a><a className="btn secondary" href="#skills">Skills</a><a className="btn secondary" href="#education">Education</a>
+      <a className="btn secondary" href="#profile">Profile</a><a className="btn secondary" href="#resume">CV</a><a className="btn secondary" href="#projects">Projects</a><a className="btn secondary" href="#skills">Skills</a><a className="btn secondary" href="#education">Education</a><Link className="btn secondary" href="/admin/content">Blog, experience, services & inbox ↗</Link>
     </nav>
     {params.updated && <p className="notice" role="status">Changes saved successfully.</p>}
 
