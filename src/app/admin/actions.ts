@@ -45,7 +45,31 @@ export async function createProject(formData: FormData) {
   if (error) throw new Error(error.message);
   revalidatePath("/");
   revalidatePath("/admin");
-  redirect("/admin?updated=project");
+  redirect("/admin?updated=project-created");
+}
+
+export async function updateProject(formData: FormData) {
+  const { supabase } = await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  const title = String(formData.get("title") ?? "").trim();
+  const slug = String(formData.get("slug") ?? "").trim();
+  if (!id || !title || !slug) throw new Error("Project ID, title and slug are required.");
+  const technologies = String(formData.get("technologies") ?? "").split(",").map(v=>v.trim()).filter(Boolean);
+  const { error } = await supabase.from("portfolio_projects").update({
+    title, slug, summary: String(formData.get("summary") ?? "").trim(),
+    description: String(formData.get("description") ?? "").trim(),
+    technologies, live_url: String(formData.get("live_url") ?? "").trim(),
+    repo_url: String(formData.get("repo_url") ?? "").trim(),
+    image_url: String(formData.get("image_url") ?? "").trim(),
+    featured: formData.get("featured") === "on",
+    published: formData.get("published") === "on",
+    sort_order: Number(formData.get("sort_order") ?? 0),
+    updated_at: new Date().toISOString()
+  }).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/");
+  revalidatePath("/admin");
+  redirect("/admin?updated=project-updated");
 }
 
 export async function deleteProject(formData: FormData) {
@@ -56,7 +80,7 @@ export async function deleteProject(formData: FormData) {
   if (error) throw new Error(error.message);
   revalidatePath("/");
   revalidatePath("/admin");
-  redirect("/admin?updated=deleted");
+  redirect("/admin?updated=project-deleted");
 }
 
 export async function signOut() {
