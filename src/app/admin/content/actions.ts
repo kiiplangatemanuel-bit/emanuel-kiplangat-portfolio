@@ -29,11 +29,11 @@ export async function saveContent(formData:FormData){
   const kind=value(formData,"kind") as Kind;
   if(!(kind in tableByKind)) throw new Error("Unsupported content type.");
   const data=payload(kind,formData);
-  if(kind==="post"&&(!data.title||!data.slug)) throw new Error("Article title and slug are required.");
-  if(kind==="experience"&&(!data.role||!data.organization)) throw new Error("Role and organization are required.");
-  if(kind==="certification"&&(!data.name||!data.issuer)) throw new Error("Certification and issuer are required.");
-  if(kind==="service"&&(!data.title||!data.description)) throw new Error("Service title and description are required.");
-  if(kind==="testimonial"&&(!data.quote||!data.person_name)) throw new Error("Quote and contributor name are required.");
+  if(kind==="post"&&(!value(formData,"title")||!(value(formData,"slug")||value(formData,"title")))) throw new Error("Article title and slug are required.");
+  if(kind==="experience"&&(!value(formData,"title")||!value(formData,"organization"))) throw new Error("Role and organization are required.");
+  if(kind==="certification"&&(!value(formData,"title")||!value(formData,"organization"))) throw new Error("Certification and issuer are required.");
+  if(kind==="service"&&(!value(formData,"title")||!value(formData,"description"))) throw new Error("Service title and description are required.");
+  if(kind==="testimonial"&&(!value(formData,"description")||!value(formData,"title"))) throw new Error("Quote and contributor name are required.");
   const id=value(formData,"id");
   const table=tableByKind[kind];
   const result=id?await supabase.from(table).update(data).eq("id",id):await supabase.from(table).insert(data);
