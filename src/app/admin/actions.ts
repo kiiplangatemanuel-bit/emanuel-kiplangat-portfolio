@@ -29,7 +29,8 @@ export async function saveProfile(formData: FormData) {
 export async function createProject(formData: FormData) {
   const { supabase } = await requireAdmin();
   const title = String(formData.get("title") ?? "").trim();
-  const slug = String(formData.get("slug") ?? title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")).trim();
+  const requestedSlug = String(formData.get("slug") ?? "").trim();
+  const slug = requestedSlug || title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
   if (!title || !slug) throw new Error("Project title and slug are required.");
   const technologies = String(formData.get("technologies") ?? "").split(",").map(v=>v.trim()).filter(Boolean);
   const { error } = await supabase.from("portfolio_projects").insert({
