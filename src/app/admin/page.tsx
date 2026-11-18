@@ -7,6 +7,7 @@ import {
 } from "./actions";
 import ResumeUpload from "./resume-upload";
 import ProfileImageUpload from "./profile-image-upload";
+import ProjectGalleryUpload from "./project-gallery-upload";
 
 export const dynamic = "force-dynamic";
 
@@ -108,6 +109,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
             <button className="btn primary">Save project</button>
           </form>
         </details>
+        <ProjectGalleryUpload projectId={project.id} currentUrls={project.gallery_urls ?? []} currentCoverUrl={project.image_url ?? ""}/>
         <form action={deleteProject} className="delete-form"><input type="hidden" name="id" value={project.id}/><button className="btn danger">Delete project</button></form>
       </article>)}</div>
     </section>
