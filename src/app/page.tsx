@@ -29,7 +29,7 @@ export default async function HomePage() {
             <p className="hero-lead">{profile.bio}</p>
             <div className="actions">
               <a className="btn primary" href="#projects">Explore my work <ArrowUpRight size={17}/></a>
-              <a className="btn secondary" href="#contact">Get in touch</a>
+              <a className="btn secondary" href="#contact">Get in touch</a>{profile.resume_url && <a className="btn secondary" href={profile.resume_url} target="_blank" rel="noreferrer">Download CV <ArrowUpRight size={15}/></a>}
             </div>
             <div className="hero-meta"><span><MapPin size={14}/> {profile.location || "Kenya"}</span><span><Sparkles size={14}/> Open to learning and collaboration</span></div>
           </div>
