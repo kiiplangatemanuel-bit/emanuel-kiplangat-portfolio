@@ -91,22 +91,29 @@ do $$
 declare t text;
 begin
   foreach t in array array['portfolio_experience','portfolio_certifications','portfolio_posts','portfolio_services','portfolio_testimonials'] loop
+    execute format('revoke all on table public.%1$s from anon, authenticated', t);
+    execute format('grant select on table public.%1$s to anon, authenticated', t);
+    execute format('grant insert, update, delete on table public.%1$s to authenticated', t);
     execute format('drop policy if exists "Public can read published %1$s" on public.%1$s', t);
-    execute format('create policy "Public can read published %1$s" on public.%1$s for select using (published = true)', t);
+    execute format('create policy "Public can read published %1$s" on public.%1$s for select to anon, authenticated using (published = true)', t);
     execute format('drop policy if exists "Portfolio admins manage %1$s" on public.%1$s', t);
-    execute format('create policy "Portfolio admins manage %1$s" on public.%1$s for all using ((select auth.jwt())->''app_metadata''->>''role'' = ''portfolio_admin'') with check ((select auth.jwt())->''app_metadata''->>''role'' = ''portfolio_admin'')', t);
+    execute format('create policy "Portfolio admins manage %1$s" on public.%1$s for all to authenticated using ((select auth.jwt())->''app_metadata''->>''role'' = ''portfolio_admin'') with check ((select auth.jwt())->''app_metadata''->>''role'' = ''portfolio_admin'')', t);
   end loop;
 end $$;
 
+revoke all on table public.portfolio_enquiries from anon, authenticated;
+grant insert on table public.portfolio_enquiries to anon, authenticated;
+grant select, update, delete on table public.portfolio_enquiries to authenticated;
+
 drop policy if exists "Anyone can submit portfolio enquiries" on public.portfolio_enquiries;
-create policy "Anyone can submit portfolio enquiries" on public.portfolio_enquiries for insert with check (
+create policy "Anyone can submit portfolio enquiries" on public.portfolio_enquiries for insert to anon, authenticated with check (
   length(trim(name)) between 2 and 120 and
   length(trim(email)) between 5 and 254 and
   length(trim(subject)) between 2 and 160 and
   length(trim(message)) between 10 and 5000
 );
 drop policy if exists "Portfolio admins manage enquiries" on public.portfolio_enquiries;
-create policy "Portfolio admins manage enquiries" on public.portfolio_enquiries for all
+create policy "Portfolio admins manage enquiries" on public.portfolio_enquiries for all to authenticated
   using ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin')
   with check ((select auth.jwt())->'app_metadata'->>'role' = 'portfolio_admin');
 
