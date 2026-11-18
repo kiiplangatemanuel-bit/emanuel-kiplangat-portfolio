@@ -12,6 +12,7 @@ create table if not exists public.portfolio_profile (
   github_url text not null default 'https://github.com/kiiplangatemanuel-bit',
   linkedin_url text not null default '',
   avatar_url text not null default '',
+  resume_url text not null default '',
   updated_at timestamptz not null default now()
 );
 
@@ -115,6 +116,37 @@ values (
   true,
   1
 ) on conflict (slug) do nothing;
+
+
+-- Public portfolio files: public download, administrator-only upload/update/delete.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'portfolio-assets',
+  'portfolio-assets',
+  true,
+  5242880,
+  array['application/pdf', 'image/jpeg', 'image/png', 'image/webp']
+)
+on conflict (id) do update
+set public = excluded.public,
+    file_size_limit = excluded.file_size_limit,
+    allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "Portfolio admins can upload portfolio assets" on storage.objects;
+create policy "Portfolio admins can upload portfolio assets"
+on storage.objects for insert to authenticated
+with check (bucket_id = 'portfolio-assets' and (select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+
+drop policy if exists "Portfolio admins can update portfolio assets" on storage.objects;
+create policy "Portfolio admins can update portfolio assets"
+on storage.objects for update to authenticated
+using (bucket_id = 'portfolio-assets' and (select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin')
+with check (bucket_id = 'portfolio-assets' and (select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
+
+drop policy if exists "Portfolio admins can delete portfolio assets" on storage.objects;
+create policy "Portfolio admins can delete portfolio assets"
+on storage.objects for delete to authenticated
+using (bucket_id = 'portfolio-assets' and (select auth.jwt()->'app_metadata'->>'role') = 'portfolio_admin');
 
 -- Create your admin user in Supabase Auth, then set app_metadata.role to
 -- "portfolio_admin" using the SQL example in README.md.
