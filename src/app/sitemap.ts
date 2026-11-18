@@ -4,7 +4,8 @@ export const dynamic = "force-dynamic";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://emanuel-kiplangat-portfolio.vercel.app";
   const entries: MetadataRoute.Sitemap = [
-    {url:base,lastModified:new Date()},\n    {url:base+"/portfolio",lastModified:new Date()},
+    {url:base,lastModified:new Date()},
+    {url:base+"/portfolio",lastModified:new Date()},
     {url:base+"/blog",lastModified:new Date()},
     {url:base+"/cv",lastModified:new Date()}
   ];
