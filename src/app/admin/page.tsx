@@ -6,6 +6,7 @@ import {
   deleteSkill, saveProfile, signOut, updateEducation, updateProject, updateSkill
 } from "./actions";
 import ResumeUpload from "./resume-upload";
+import ProfileImageUpload from "./profile-image-upload";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +47,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         <label className="field">Biography<textarea name="bio" defaultValue={p.bio}/></label>
         <button className="btn primary">Save profile</button>
       </form>
+      <ProfileImageUpload currentUrl={p.avatar_url ?? ""}/>
     </section>
 
     <section className="admin-panel" id="resume">
