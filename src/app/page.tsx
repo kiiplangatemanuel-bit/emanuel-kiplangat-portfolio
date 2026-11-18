@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "next/link";\nimport Image from "next/image";
 import { ArrowDown, ArrowUpRight, Github, Linkedin, Mail, MapPin, Sparkles, BriefcaseBusiness, Award, BookOpen, Code2 } from "lucide-react";
 import { getPortfolioData } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
@@ -34,7 +34,7 @@ export default async function HomePage() {
     } catch { /* Existing portfolio sections remain available until the content migration is applied. */ }
   }
   const skillGroups = skills.reduce<Record<string, string[]>>((groups, skill) => {
-    (groups[skill.category || "Technology"] ??= []).push(skill.name);
+    (groups[skill.category || "Technology"] ??= []).push(skill.name + (skill.proficiency ? " · " + skill.proficiency : ""));
     return groups;
   }, {});
   const initials = profile.full_name.split(" ").map(part => part[0]).slice(0, 2).join("");
@@ -56,13 +56,13 @@ export default async function HomePage() {
         <div className="actions">
           <a className="btn primary" href="#projects">Explore my work <ArrowUpRight size={17}/></a>
           <a className="btn secondary" href="#contact">Get in touch</a>
-          {profile.resume_url && <a className="btn secondary" href={profile.resume_url} target="_blank" rel="noreferrer">Download CV <ArrowUpRight size={15}/></a>}
+          {profile.resume_url && <><a className="btn secondary" href={profile.resume_url} target="_blank" rel="noreferrer">Download CV <ArrowUpRight size={15}/></a><Link className="btn secondary" href="/cv">Preview CV</Link></>}
         </div>
         <div className="hero-meta"><span><MapPin size={14}/> {profile.location || "Kenya"}</span><span><Sparkles size={14}/> {profile.availability_status || "Open to learning and collaboration"}</span></div>
       </div>
       <div className="hero-visual"><div className="visual-orbit orbit-one"/><div className="visual-orbit orbit-two"/>
         <div className="profile-card">
-          {profile.avatar_url ? <img className="avatar" src={profile.avatar_url} alt={profile.full_name}/> : <div className="avatar avatar-initials">{initials}</div>}
+          {profile.avatar_url ? <Image className="avatar" src={profile.avatar_url} alt={profile.full_name} width={600} height={510} unoptimized/> : <div className="avatar avatar-initials">{initials}</div>}
           <div className="profile-card-copy"><div className="eyebrow">Hello, I’m</div><h2>{profile.full_name}</h2><p>{profile.headline}</p></div>
           <div className="profile-card-footer"><span className="status-dot"/> Creating, learning, improving</div>
         </div>
