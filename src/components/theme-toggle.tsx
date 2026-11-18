@@ -9,8 +9,11 @@ export default function ThemeToggle() {
     const saved = window.localStorage.getItem("ek-theme");
     const preferred = window.matchMedia("(prefers-color-scheme: light)").matches;
     const next = saved ? saved === "light" : preferred;
-    setLight(next);
-    document.documentElement.dataset.theme = next ? "light" : "dark";
+    const frame = window.requestAnimationFrame(() => {
+      setLight(next);
+      document.documentElement.dataset.theme = next ? "light" : "dark";
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
   function toggle() {
     const next = !light;
