@@ -17,6 +17,8 @@ export async function saveProfile(formData: FormData) {
     github_url: String(formData.get("github_url") ?? "").trim(),
     linkedin_url: String(formData.get("linkedin_url") ?? "").trim(),
     avatar_url: String(formData.get("avatar_url") ?? "").trim(),
+    availability_status: String(formData.get("availability_status") ?? "").trim(),
+    website_url: String(formData.get("website_url") ?? "").trim(),
     updated_at: new Date().toISOString()
   };
   const { error } = await supabase.from("portfolio_profile").update(payload).eq("id", 1);
@@ -39,6 +41,11 @@ export async function createProject(formData: FormData) {
     technologies, live_url: String(formData.get("live_url") ?? "").trim(),
     repo_url: String(formData.get("repo_url") ?? "").trim(),
     image_url: String(formData.get("image_url") ?? "").trim(),
+    problem: String(formData.get("problem") ?? "").trim(),
+    role_and_contributions: String(formData.get("role_and_contributions") ?? "").trim(),
+    challenges_and_solutions: String(formData.get("challenges_and_solutions") ?? "").trim(),
+    outcomes: String(formData.get("outcomes") ?? "").trim(),
+    gallery_urls: String(formData.get("gallery_urls") ?? "").split(",").map(v=>v.trim()).filter(Boolean),
     featured: formData.get("featured") === "on",
     published: formData.get("published") === "on",
     sort_order: Number(formData.get("sort_order") ?? 0)
@@ -62,6 +69,11 @@ export async function updateProject(formData: FormData) {
     technologies, live_url: String(formData.get("live_url") ?? "").trim(),
     repo_url: String(formData.get("repo_url") ?? "").trim(),
     image_url: String(formData.get("image_url") ?? "").trim(),
+    problem: String(formData.get("problem") ?? "").trim(),
+    role_and_contributions: String(formData.get("role_and_contributions") ?? "").trim(),
+    challenges_and_solutions: String(formData.get("challenges_and_solutions") ?? "").trim(),
+    outcomes: String(formData.get("outcomes") ?? "").trim(),
+    gallery_urls: String(formData.get("gallery_urls") ?? "").split(",").map(v=>v.trim()).filter(Boolean),
     featured: formData.get("featured") === "on",
     published: formData.get("published") === "on",
     sort_order: Number(formData.get("sort_order") ?? 0),
@@ -92,6 +104,7 @@ export async function createSkill(formData: FormData) {
   const { error } = await supabase.from("portfolio_skills").insert({
     name,
     category: String(formData.get("category") ?? "Technology").trim() || "Technology",
+    proficiency: String(formData.get("proficiency") ?? "").trim(),
     sort_order: Number(formData.get("sort_order") ?? 0)
   });
   if (error) throw new Error(error.message);
@@ -108,6 +121,7 @@ export async function updateSkill(formData: FormData) {
   const { error } = await supabase.from("portfolio_skills").update({
     name,
     category: String(formData.get("category") ?? "Technology").trim() || "Technology",
+    proficiency: String(formData.get("proficiency") ?? "").trim(),
     sort_order: Number(formData.get("sort_order") ?? 0)
   }).eq("id", id);
   if (error) throw new Error(error.message);

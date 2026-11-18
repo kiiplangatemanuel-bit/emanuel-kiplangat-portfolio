@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { TouchEvent } from "react";
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, Github, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
@@ -23,7 +24,7 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
   const trackRef = useRef<HTMLDivElement>(null);
   const initials = profile.full_name.split(" ").map(part => part[0]).slice(0, 2).join("");
   const skillGroups = skills.reduce<Record<string, string[]>>((groups, skill) => {
-    (groups[skill.category || "Technology"] ??= []).push(skill.name);
+    (groups[skill.category || "Technology"] ??= []).push(skill.name + (skill.proficiency ? " · " + skill.proficiency : ""));
     return groups;
   }, {});
 
@@ -37,7 +38,7 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     const initial = slides.findIndex(slide => slide.id === hash);
-    if (initial >= 0) setActive(initial);
+    const initialFrame = initial >= 0 ? window.requestAnimationFrame(() => setActive(initial)) : null;
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       if (target && (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))) return;
@@ -49,7 +50,7 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
     const onHash = () => { const index = slides.findIndex(slide => slide.id === window.location.hash.slice(1)); if (index >= 0) setActive(index); };
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("hashchange", onHash);
-    return () => { window.removeEventListener("keydown", onKeyDown); window.removeEventListener("hashchange", onHash); };
+    return () => { if (initialFrame !== null) window.cancelAnimationFrame(initialFrame); window.removeEventListener("keydown", onKeyDown); window.removeEventListener("hashchange", onHash); };
   }, [goTo]);
 
   const onTouchStart = (event: TouchEvent) => { const touch = event.touches[0]; touchStart.current = { x: touch.clientX, y: touch.clientY }; };
@@ -68,7 +69,7 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
         <nav className="nav slide-nav" aria-label="Main navigation">
           <a className="brand" href="#home" onClick={event => { event.preventDefault(); goTo(0); }} aria-label={profile.full_name + " home"}>EK<span>.</span></a>
           <div className="navlinks" aria-label="Portfolio sections">
-            {slides.slice(1, 5).map((slide, index) => <button key={slide.id} type="button" className={active === index + 1 ? "active" : ""} onClick={() => goTo(index + 1)} aria-current={active === index + 1 ? "page" : undefined}>{slide.label}</button>)}
+            {slides.slice(1, 5).map((slide, index) => <button key={slide.id} type="button" className={active === index + 1 ? "active" : ""} onClick={() => goTo(index + 1)} aria-current={active === index + 1 ? "page" : undefined}>{slide.label}</button>)}<Link href="/portfolio">Portfolio 2.0</Link><Link href="/blog">Blog</Link><Link href="/cv">CV</Link>
           </div>
           <button className="nav-cta" type="button" onClick={() => goTo(5)}>Let’s talk <ArrowUpRight size={15}/></button>
         </nav>
@@ -87,9 +88,9 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
                 <div className="actions">
                   <button className="btn primary" type="button" onClick={() => goTo(2)}>Explore my work <ArrowUpRight size={17}/></button>
                   <button className="btn secondary" type="button" onClick={() => goTo(5)}>Get in touch</button>
-                  {profile.resume_url && <a className="btn secondary" href={profile.resume_url} target="_blank" rel="noreferrer">Download CV <ArrowUpRight size={15}/></a>}
+                  {profile.resume_url && <a className="btn secondary" href={profile.resume_url} target="_blank" rel="noreferrer">Download CV <ArrowUpRight size={15}/></a>}<Link className="btn secondary" href="/portfolio">Explore Portfolio 2.0 <ArrowUpRight size={15}/></Link>
                 </div>
-                <div className="hero-meta"><span><MapPin size={14}/> {profile.location || "Kenya"}</span><span><Sparkles size={14}/> Open to learning and collaboration</span></div>
+                <div className="hero-meta"><span><MapPin size={14}/> {profile.location || "Kenya"}</span><span><Sparkles size={14}/> {profile.availability_status || "Open to learning and collaboration"}</span></div>
               </div>
               <div className="hero-visual">
                 <div className="visual-orbit orbit-one"/><div className="visual-orbit orbit-two"/>
@@ -117,7 +118,7 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
                     {project.image_url ? <Image className="project-image" src={project.image_url} alt={project.title + " project preview"} width={960} height={540} unoptimized/> : <div className={"project-placeholder project-placeholder-" + (index % 3)}><span>{String(index + 1).padStart(2,"0")}</span><div className="placeholder-window"><i/><i/><i/><b>{project.title}</b><small>{project.technologies?.slice(0,3).join(" · ") || "Digital product"}</small></div></div>}
                     {project.featured && <span className="featured-label">Featured project</span>}
                   </div>
-                  <div className="project-content"><div className="project-index">PROJECT / {String(index + 1).padStart(2,"0")}</div><h3>{project.title}</h3><p className="muted">{project.summary}</p><div className="tags">{project.technologies?.map(tag=><span className="tag" key={tag}>{tag}</span>)}</div><div className="project-links">{project.live_url && <a href={project.live_url} target="_blank" rel="noreferrer">View live <ArrowUpRight size={15}/></a>}{project.repo_url && <a href={project.repo_url} target="_blank" rel="noreferrer"><Github size={15}/> Source code</a>}</div></div>
+                  <div className="project-content"><div className="project-index">PROJECT / {String(index + 1).padStart(2,"0")}</div><h3>{project.title}</h3><p className="muted">{project.summary}</p><div className="tags">{project.technologies?.map(tag=><span className="tag" key={tag}>{tag}</span>)}</div><div className="project-links"><Link href={"/projects/" + project.slug}>Case study <ArrowUpRight size={15}/></Link>{project.live_url && <a href={project.live_url} target="_blank" rel="noreferrer">View live <ArrowUpRight size={15}/></a>}{project.repo_url && <a href={project.repo_url} target="_blank" rel="noreferrer"><Github size={15}/> Source code</a>}</div></div>
                 </article>)}
                 {projects.length === 0 && <article className="project-card project-empty"><div className="section-kicker">More work coming soon</div><h3>New projects are in progress.</h3><p className="muted">Check back as I continue documenting and publishing my work.</p></article>}
               </div>
