@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";\nimport PortfolioAnalytics from "@/components/portfolio-analytics";
+import "./globals.css";
+import PortfolioAnalytics from "@/components/portfolio-analytics";
 
 const siteUrl = "https://emanuel-kiplangat-portfolio.vercel.app";
 export const metadata: Metadata = {
