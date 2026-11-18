@@ -1,4 +1,6 @@
 -- Portfolio 2.0 content model. Existing profile, projects, skills and education are preserved.
+alter table public.portfolio_skills add column if not exists proficiency text;
+
 alter table public.portfolio_profile
   add column if not exists availability_status text not null default 'Open to internships and collaboration',
   add column if not exists website_url text,
