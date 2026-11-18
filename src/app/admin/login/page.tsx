@@ -1,13 +1,12 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const params = useSearchParams();
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
   const [error,setError] = useState("");
@@ -36,7 +35,6 @@ export default function AdminLoginPage() {
     <div className="admin-panel" style={{marginTop:24}}>
       <div className="eyebrow">Private administration</div><h2 style={{marginTop:12}}>Sign in to manage your website</h2>
       <p className="muted">Only the portfolio administrator can access this area.</p>
-      {params.get("error")==="not-authorized" && <p className="notice">This account does not have administrator access.</p>}
       {error && <p role="alert" style={{color:"#fca5a5"}}>{error}</p>}
       <form className="form" onSubmit={submit}>
         <label className="field">Email address<input type="email" autoComplete="username" required value={email} onChange={e=>setEmail(e.target.value)}/></label>
