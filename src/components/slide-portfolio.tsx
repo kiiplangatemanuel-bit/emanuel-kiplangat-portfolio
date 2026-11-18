@@ -79,7 +79,7 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
 
         <div className="slide-track-viewport" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           <div ref={trackRef} className="slide-track" style={{ transform: `translate3d(-${active * 100}%, 0, 0)` }} tabIndex={-1} aria-live="polite">
-            <section className="portfolio-slide hero" id="home" aria-label="Home">
+            <section className="portfolio-slide hero" id="home" inert={active !== 0} aria-hidden={active !== 0} aria-label="Home">
               <div className="hero-copy">
                 <div className="eyebrow"><span className="status-dot"/> Information Technology undergraduate · Kenya</div>
                 <h1>Building digital products that <span className="gradient-text">solve real problems.</span></h1>
@@ -104,12 +104,12 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
               <button className="scroll-cue" type="button" onClick={() => goTo(1)}><ArrowDown size={15}/> Explore about me</button>
             </section>
 
-            <section className="portfolio-slide intro-strip" id="about" aria-label="About me">
+            <section className="portfolio-slide intro-strip" id="about" inert={active !== 1} aria-hidden={active !== 1} aria-label="About me">
               <div className="section-kicker">01 / About me</div>
               <div><h2>Technology is most powerful when it makes everyday work better.</h2><p className="muted">I’m an Information Technology student at Karatina University, building my experience through practical software projects. I’m interested in thoughtful user experiences, dependable web applications and systems that connect people with the tools they need.</p><div className="slide-inline-actions"><button className="btn secondary" type="button" onClick={() => goTo(2)}>See selected work <ArrowRight size={15}/></button></div></div>
             </section>
 
-            <section className="portfolio-slide section" id="projects" aria-label="Selected projects">
+            <section className="portfolio-slide section" id="projects" inert={active !== 2} aria-hidden={active !== 2} aria-label="Selected projects">
               <div className="section-heading"><div><div className="section-kicker">02 / Selected work</div><h2>Projects & experiments</h2></div><p className="muted">A selection of things I’m building, exploring and learning from.</p></div>
               <div className="project-grid">
                 {projects.map((project, index) => <article className="project-card" key={project.id}>
@@ -123,17 +123,17 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
               </div>
             </section>
 
-            <section className="portfolio-slide section skills-section" id="skills" aria-label="Technical skills">
+            <section className="portfolio-slide section skills-section" id="skills" inert={active !== 3} aria-hidden={active !== 3} aria-label="Technical skills">
               <div className="section-heading"><div><div className="section-kicker">03 / Toolkit</div><h2>Skills I’m developing</h2></div><p className="muted">A growing set of technologies and practices I use in my projects.</p></div>
               {Object.keys(skillGroups).length ? <div className="skills-grid">{Object.entries(skillGroups).map(([group,items])=><article className="skill-group" key={group}><h3>{group}</h3><div className="tags">{items.map(item=><span className="tag" key={item}>{item}</span>)}</div></article>)}</div> : <p className="muted">My skills list is being updated. Please check back soon.</p>}
             </section>
 
-            <section className="portfolio-slide section education-section" id="education" aria-label="Education">
+            <section className="portfolio-slide section education-section" id="education" inert={active !== 4} aria-hidden={active !== 4} aria-label="Education">
               <div className="section-heading"><div><div className="section-kicker">04 / Education</div><h2>Learning with purpose</h2></div><p className="muted">Building a strong foundation and applying it through practical work.</p></div>
               <div className="education-list">{education.map(item=><article className="education-item" key={item.id}><div className="education-date">{item.start_year || "Current"} — {item.end_year || "Present"}</div><div><h3>{item.qualification}</h3><p>{item.institution}</p>{item.details && <p className="muted">{item.details}</p>}</div><span className="education-mark">↗</span></article>)}</div>
             </section>
 
-            <section className="portfolio-slide contact-slide" id="contact" aria-label="Contact">
+            <section className="portfolio-slide contact-slide" id="contact" inert={active !== 5} aria-hidden={active !== 5} aria-label="Contact">
               <div className="contact-section"><div className="contact-glow"/><div className="section-kicker">05 / Contact</div><h2>Have an idea?<br/><span className="gradient-text">Let’s make it useful.</span></h2><p className="muted">I’m open to conversations about technology, collaborations, learning opportunities and meaningful software projects.</p>
                 <div className="actions">
                   {profile.email && <a className="btn primary" href={`mailto:${profile.email}`}><Mail size={16}/> Email me</a>}
