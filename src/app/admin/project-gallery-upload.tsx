@@ -71,6 +71,13 @@ export default function ProjectGalleryUpload({projectId,currentUrls,currentCover
     finally{setBusy(false);}
   }
   return <div className="asset-upload project-gallery-upload">
+    <strong>Project cover image</strong>
+    <p className="muted">Upload or replace the main image shown for this project. JPG, PNG or WebP, maximum 5 MB.</p>
+    {coverUrl&&<div className="project-upload-preview"><div><Image src={coverUrl} alt="Project cover image" width={240} height={150} unoptimized/><span>Current cover</span></div></div>}
+    <label className="field">Choose cover image<input type="file" accept="image/jpeg,image/png,image/webp" onChange={chooseCover}/></label>
+    {coverFile&&<p className="muted">{coverFile.name} selected.</p>}
+    <button type="button" className="btn primary" disabled={!coverFile||busy} onClick={uploadCover}>{busy?"Uploading…":"Upload cover image"}</button>
+    <hr/>
     <strong>Project screenshots</strong>
     <p className="muted">Upload JPG, PNG or WebP files (maximum 5 MB each). The first uploaded image also becomes the cover if no cover is set.</p>
     {urls.length>0&&<div className="project-upload-preview">{urls.map((url,index)=><div key={url+index}><Image src={url} alt={`Project screenshot ${index+1}`} width={180} height={112} unoptimized/><span>Screenshot {index+1}</span></div>)}</div>}
