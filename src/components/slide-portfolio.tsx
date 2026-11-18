@@ -4,10 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { TouchEvent } from "react";
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, Github, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, Github, Linkedin, Mail, MapPin, MessageCircle, Sparkles } from "lucide-react";
 import type { Education, Profile, Project, Skill } from "@/lib/types";
 
 type Props = { profile: Profile; projects: Project[]; skills: Skill[]; education: Education[] };
+
+function getWhatsAppNumber(phone: string) {
+  const digits = phone.replace(/\\D/g, "");
+  if (digits.startsWith("0")) return "254" + digits.slice(1);
+  if (digits.startsWith("254")) return digits;
+  if (digits.startsWith("7") || digits.startsWith("1")) return "254" + digits;
+  return digits;
+}
 
 const slides = [
   { id: "home", label: "Home" },
@@ -173,7 +181,10 @@ export default function SlidePortfolio({ profile, projects, skills, education }:
               <div className="contact-section"><div className="contact-glow"/><div className="section-kicker">05 / Contact</div><h2>Have an idea?<br/><span className="gradient-text">Let’s make it useful.</span></h2><p className="muted">I’m open to conversations about technology, collaborations, learning opportunities and meaningful software projects.</p>
                 <div className="actions">
                   {profile.email && <a className="btn primary" href={`mailto:${profile.email}`}><Mail size={16}/> Email me</a>}
-                  {profile.phone && <a className="btn secondary" href={`tel:${profile.phone}`}>Call me</a>}
+                  {profile.phone && <>
+                    <a className="btn secondary" href={`tel:${profile.phone}`}>Call me</a>
+                    <a className="btn secondary" href={`https://wa.me/${getWhatsAppNumber(profile.phone)}?text=${encodeURIComponent("Hello Emanuel, I found your portfolio and would like to connect.")}`} target="_blank" rel="noreferrer"><MessageCircle size={16}/> WhatsApp</a>
+                  </>}
                   {profile.github_url && <a className="btn secondary" href={profile.github_url} target="_blank" rel="noreferrer"><Github size={16}/> GitHub</a>}
                   {profile.linkedin_url && <a className="btn secondary" href={profile.linkedin_url} target="_blank" rel="noreferrer"><Linkedin size={16}/> LinkedIn</a>}
                 </div>
